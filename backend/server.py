@@ -30,7 +30,7 @@ def make_server(service, web_root, token, port=8765, pages_origin='https://azatt
             self.send_header('Content-Length', str(len(data)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
-            self.send_header('Referrer-Policy', 'no-referrer')
+            self.send_header('Referrer-Policy', 'strict-origin-when-cross-origin')
             self.send_header('X-Frame-Options', 'DENY')
             self.end_headers()
             self.wfile.write(data)

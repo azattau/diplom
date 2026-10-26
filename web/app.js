@@ -21,7 +21,7 @@ if (window.L) {
   map = L.map('map', {zoomControl: false}).setView([54.5, 56.3], 7);
   L.control.zoom({position: 'bottomright'}).addTo(map);
   let tileErrors = 0;
-  const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
   tiles.on('tileerror', () => { if (++tileErrors > 4) $('mapError').hidden = false; });
