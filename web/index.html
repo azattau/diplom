@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Птицы — карта наблюдений</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Птицы — главная"><img src="./favicon.svg" alt="" width="38" height="38"><span>ПТИЦЫ<small>ЖУРНАЛ НАБЛЮДЕНИЙ</small></span></a>
+    <div class="workspace-label"><span class="dot"></span>Рабочее место оператора</div>
+    <button class="connection-button" id="connectionButton"><span class="status-dot" id="statusDot"></span><span id="connectionLabel">Подключить Ollama</span><span aria-hidden="true">↗</span></button>
+  </header>
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="intro"><p class="eyebrow">РЕСПУБЛИКА БАШКОРТОСТАН</p><h1>Карта наблюдений</h1><p>Сообщение становится точкой на карте.</p></section>
+      <section class="compose-panel" aria-labelledby="composeTitle">
+        <div class="section-title"><h2 id="composeTitle">Новое сообщение</h2><span class="tag">Ручной ввод</span></div>
+        <form id="reportForm">
+          <label class="sr-only" for="message">Текст сообщения о наблюдении</label>
+          <textarea id="message" rows="5" maxlength="4000" minlength="3" required placeholder="Например: В Уфе возле парка заметили птицу в 14:20."></textarea>
+          <div class="input-caption"><button type="button" class="text-button" id="exampleButton">Вставить пример</button><span id="charCount">0 / 4000</span></div>
+          <div class="model-row"><label for="model">Модель Ollama</label><select id="model" required><option value="">Сначала подключитесь</option></select></div>
+          <button class="primary" id="submitButton" type="submit" disabled><span aria-hidden="true">＋</span> Нанести на карту</button>
+          <p class="form-note">Координаты берём из справочника. Тексты обрабатываются на вашем компьютере.</p>
+        </form>
+        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      </section>
+      <section class="journal" aria-labelledby="journalTitle">
+        <div class="section-title"><h2 id="journalTitle">Лента сообщений</h2><span class="count" id="reportCount">0</span></div>
+        <label class="search-wrap"><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="Найти сообщение или место" aria-label="Поиск сообщений"></label>
+        <div id="reports" class="reports"><div class="empty"><span class="empty-icon" aria-hidden="true">⌁</span><h3>Начните с наблюдения</h3><p>Введите сообщение выше — здесь появятся его текст, время и найденное место.</p></div></div>
+      </section>
+      <footer class="sidebar-footer"><span>Дипломный проект</span><span>Версия 1.0 · Ollama</span></footer>
+    </aside>
+    <section class="map-panel" aria-label="Карта наблюдений">
+      <div id="map"></div>
+      <div class="map-title"><span class="live-dot"></span><div><strong>Наблюдения на карте</strong><small id="mapSubtitle">Подключите локальный сервер</small></div></div>
+      <button id="fitButton" class="map-fit" title="Показать все наблюдения" aria-label="Показать все наблюдения">⌖</button>
+      <div id="offlineBanner" class="map-banner"><strong>Готово к работе с вашим компьютером</strong><span>Запустите start.bat и подключите локальный сервер.</span><button id="bannerConnect">Подключить →</button></div>
+      <div class="map-legend"><span class="legend-marker"></span><span>Место наблюдения <b id="pointCount">0</b></span><span class="legend-divider"></span><span>Точка справочника, не точная позиция птицы</span></div>
+      <div class="map-error" id="mapError" hidden>Не удалось загрузить карту. Проверьте интернет и доступ к OpenStreetMap. Лента сообщений продолжает работать.</div>
+    </section>
+  </main>
+  <dialog id="connectionDialog" aria-labelledby="connectionTitle">
+    <form id="connectionForm">
+      <div class="dialog-header"><span class="eyebrow">ЛОКАЛЬНАЯ ОБРАБОТКА</span><button type="button" class="close-button" id="closeDialog" aria-label="Закрыть">×</button></div>
+      <h2 id="connectionTitle">Подключить рабочее место</h2>
+      <p>Запустите Ollama и <code>start.bat</code> из архива проекта. Скопируйте код из открывшегося окна.</p>
+      <label for="serverUrl">Адрес Python-сервера</label><input id="serverUrl" type="url" value="http://127.0.0.1:8765" required>
+      <label for="connectionToken">Код подключения</label><input id="connectionToken" type="password" autocomplete="off" required placeholder="Код из окна start.bat">
+      <p class="dialog-hint">Код меняется при перезапуске сервера и хранится только в этой вкладке. Разрешите браузеру доступ к локальной сети, если он спросит.</p>
+      <div id="connectionError" class="notice error" role="alert" hidden></div>
+      <button class="primary" type="submit" id="connectSubmit">Подключиться</button>
+      <a class="local-link" href="http://127.0.0.1:8765/" target="_blank" rel="noopener">Открыть локальную версию ↗</a>
+    </form>
+  </dialog>
+</body>
+</html>
